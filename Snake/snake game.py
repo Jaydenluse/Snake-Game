@@ -1,7 +1,8 @@
 import pygame
 import random
 
-start_time = pygame.time.get_ticks()
+elapsed_time = 0
+FONT = "/Users/apple/Desktop/Snake/8Bit.ttf"
 
 # Define some colors
 BLACK = (0, 0, 0)
@@ -16,6 +17,51 @@ HEIGHT = 30
 
 # This sets the margin between each cell
 MARGIN = 3
+
+def create_button(x, y, width, height, inactive_color, active_color, text, action=None):
+    mouse = pygame.mouse.get_pos()
+    click = pygame.mouse.get_pressed()
+    # Create a font object
+    font = pygame.font.Font(FONT, 22)
+    # Render the text to a surface
+    text_surface = font.render(text, True, (255, 255, 255))
+    if x + width > mouse[0] > x and y + height > mouse[1] > y:
+        pygame.draw.rect(gameDisplay, active_color, (x, y, width, height))
+        if click[0] == 1 and action is not None:
+            action()
+    else:
+        pygame.draw.rect(gameDisplay, inactive_color, (x, y, width, height))
+    gameDisplay.blit(text_surface, (x + width / 2 - text_surface.get_width() / 2, y + height / 2 - text_surface.get_height() / 2))
+
+def draw_buttons():
+    create_button(350, 350, 300, 60, BLACK, (0, 255, 0), 'Remove 5 links from snake', remove_parts)
+    create_button(350, 420, 300, 60, BLACK, (0, 255, 0), 'Keep snake same speed', lower_speed)
+
+
+def button_screen():
+    sub_screen = pygame.Surface((395, 395))
+    sub_screen.fill(BLACK)
+    gameDisplay.blit(sub_screen, [310, 310])
+
+    # Create new buttons
+    draw_buttons()
+
+    pygame.display.update()
+    pause = True
+    while pause:
+        for event in pygame.event.get():
+            if (event.type == pygame.MOUSEBUTTONUP and event.button == 1):
+                    pause = False
+
+
+def remove_parts():
+    snake_body = len(snake.body)
+    while len(snake.body) >= snake_body - 2:
+        snake.body = snake.body[:-1]
+
+def lower_speed():
+    framerate = framerate - 5
+
 
 
 class Snake:
@@ -62,6 +108,7 @@ class Snake:
             return True
 
         return False
+        
 
     def check_food(self):
         # Check if the snake ate the food
@@ -71,9 +118,12 @@ class Snake:
 
         return False
 
-
 # Initialize pygame
 pygame.init()
+
+framerate = 20
+
+elapsed_time = 0
 
 # Set display dimensions
 display_width = 600
@@ -81,15 +131,14 @@ display_height = 600
 
 # Initialize game display
 gameDisplay = pygame.display.set_mode((display_width,display_height))
-pygame.display.set_caption('Game Display')
 
 # Define colors
 black = (0,0,0)
 white = (255,255,255)
 
 # Define font
-font = pygame.font.Font("/Users/apple/Desktop/Snake/8Bit.ttf", 45)
-font2 = pygame.font.Font("/Users/apple/Desktop/Snake/8Bit.ttf", 150)
+font = pygame.font.Font(FONT, 45)
+font2 = pygame.font.Font(FONT, 150)
 
 food_counter = 0
 body_count = 0
@@ -97,9 +146,6 @@ body_count = 0
 # Set the HEIGHT and WIDTH of the screen
 WINDOW_SIZE = [1000, 1000]
 screen = pygame.display.set_mode(WINDOW_SIZE)
-
-# Set title of screen
-pygame.display.set_caption("Snake")
 
 # Loop until the user clicks the close button.
 done = False
@@ -115,6 +161,7 @@ food_pos = (random.randint(0, 19), random.randint(0, 19))
 first_key_pressed = False
 
 # -------- Main Program Loop -----------
+if_statement_run = False
 while not done:
     # --- Main event loop
     for event in pygame.event.get():
@@ -132,20 +179,32 @@ while not done:
             elif event.key == pygame.K_RIGHT:
                 snake.change_direction("RIGHT")
 
+        if not if_statement_run and food_counter % 10 == 1 and food_counter != 1:
+            if_statement_run = True
+            framerate = 25
+            button_screen()
+        elif if_statement_run and food_counter % 10 == 0:
+            if_statement_run = False
+
     # --- Game logic should go here
 
     if first_key_pressed:
         snake.move()
+        elapsed_time += clock.tick(framerate) / 1000.0
 
     if snake.check_collision():
-        done = True
+        framerate = 20
+        elapsed_time = 0
+        food_pos = (random.randint(0, 19), random.randint(0, 19))
+        first_key_pressed = False
+        food_counter = 0
+        body_count = 0
+        snake = Snake()
 
-    if food_counter % 10 == 0 and food_counter != 0:
+    quicker = food_counter % 10 == 0 and food_counter != 0
+
+    if quicker:
         food_color = GOLD
-    elif food_counter % 10 == 1 and food_counter != 1:
-        food_color = RED
-        while len(snake.body) >= (food_counter/2):
-            snake.body = snake.body[:-1]
     else:
         food_color = RED
 
@@ -182,12 +241,13 @@ while not done:
                 ],
             )
 
-    # Get time elapsed
-    elapsed_time = (pygame.time.get_ticks() - start_time) / 1000
-
     # Get score
     score = food_counter
 
+    #Background list
+    backgrounds = ['/Users/apple/Desktop/Snake/Background BW.png',]
+
+    background = pygame.image.load('/Users/apple/Desktop/Snake/Background BW.png')
     score_text = font.render("Score: " + str(score), True, white)
     time_text = font.render("{:02d}:{:02d}".format(int(elapsed_time // 60), int(elapsed_time % 60)), True, white)
     game_text = font2.render("SNAKE", True, white)
@@ -196,6 +256,7 @@ while not done:
     gameDisplay.blit(score_text, [50, 65])
     gameDisplay.blit(time_text, [875, 70])
     gameDisplay.blit(game_text, [320, 25])
+    gameDisplay.blit(background, [0,-25])
 
     pygame.display.update()
 
@@ -203,4 +264,4 @@ while not done:
     pygame.display.flip()
 
     # --- Limit to 60 frames per second
-    clock.tick(10)
+    clock.tick(framerate)
