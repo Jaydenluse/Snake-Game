@@ -2,8 +2,9 @@ import pygame
 import random
 import os
 import time
-import pickle # Will use to save later
-
+import pickle 
+import sys
+# from snake_class import Snake 
 
 file_path1 = '/Users/apple/Snake-Game/Snake/snake1.pickle'
 file_path2 = '/Users/apple/Snake-Game/Snake/snake2.pickle'
@@ -207,7 +208,6 @@ def pause_screen():
 
                     gameDisplay.blit(save_file3_tokens, (500,615))
                     gameDisplay.blit(save_file3_score, (500,580))
-                    pygame.mixer.music.load(start_noise)
                     pygame.mixer.music.play(0)
                     pygame.display.update()
 
@@ -222,19 +222,22 @@ def pause_screen():
                             mouse = pygame.mouse.get_pos()
                             if event.type == pygame.MOUSEBUTTONUP and event.button == 1:
                                 if 430 + 300 > mouse[0] > 430 and 870 + 80 > mouse[1] > 870: #GO BACK HOME
+                                    pygame.mixer.music.play(0)
                                     home = True
                                     save_pause = False
                                     pause = False
                                 if 478 + 110 > mouse[0] > 478 and 387 + 50 > mouse[1] > 387: #START GAME
+                                    pygame.mixer.music.play(0)
                                     save_game(file_path1, snake, framerate, multiplier, food_counter, score, elapsed_time, food_pos, token_pos, body_count, if_statement_run)
-                                    return
+                                    break
                                 elif 478 + 110 > mouse[0] > 478 and 487 + 50 > mouse[1] > 387: #START GAME
-                                    print('1')
+                                    pygame.mixer.music.play(0)
                                     save_game(file_path2, snake, framerate, multiplier, food_counter, score, elapsed_time, food_pos, token_pos, body_count, if_statement_run)
-                                    return
+                                    break
                                 elif 478 + 110 > mouse[0] > 478 and 587 + 50 > mouse[1] > 387: #START GAME
+                                    pygame.mixer.music.play(0)
                                     save_game(file_path3, snake, framerate, multiplier, food_counter, score, elapsed_time, food_pos, token_pos, body_count, if_statement_run)
-                                    return
+                                    break
                             if (event.type == pygame.KEYDOWN and event.key == pygame.K_TAB):
                                 save_pause = False
                 
@@ -244,6 +247,8 @@ def pause_screen():
     return home
 
 def save_game(file_path, snake, framerate, multiplier, food_counter, score, elapsed_time, food_pos, token_pos, body_count, if_statement_run):
+    pygame.mixer.music.load('/Users/apple/Snake-Game/Snake/Assets/snake pause.wav')
+    pygame.mixer.music.play(0)
     with open(file_path, "wb") as file:
         data = (snake, framerate, multiplier, food_counter, score, elapsed_time, food_pos, token_pos, body_count, if_statement_run)
         pickle.dump(data, file)
@@ -323,9 +328,6 @@ def slow_snake():
 def multiply_score():
     global multiplier
     multiplier = multiplier * 2
-
-
-
 
 class Snake:
     def __init__(self):
@@ -417,30 +419,10 @@ snake = Snake()
 food_pos = (random.randint(0, 19), random.randint(0, 19))
 token_pos = (random.randint(0, 19), random.randint(0, 19))
 
-
-# Define colors
-black = (0,0,0)
-white = (255,255,255)
-
 # Define font
 font = pygame.font.Font(FONT, 45)        
 font2 = pygame.font.Font(FONT, 150)
 font3 = pygame.font.Font(FONT, 25)
-
-with open(file_path1, "rb") as file:
-    data = pickle.load(file)
-save_file1_tokens = font3.render(f'tokens: {data[0].tokens}', True, (255, 255, 255)) 
-save_file1_score = font3.render(f'score: {data[3]}', True, (255, 255, 255))
-
-with open(file_path2, "rb") as file:
-    data = pickle.load(file)
-save_file2_tokens = font3.render(f'tokens: {data[0].tokens}', True, (255, 255, 255)) 
-save_file2_score = font3.render(f'score: {data[3]}', True, (255, 255, 255))
-
-with open(file_path3, "rb") as file:
-    data = pickle.load(file)
-save_file3_tokens = font3.render(f'tokens: {data[0].tokens}', True, (255, 255, 255)) 
-save_file3_score = font3.render(f'score: {data[3]}', True, (255, 255, 255))
 
 # Set the HEIGHT and WIDTH of the screen
 WINDOW_SIZE = [1000, 1000]
@@ -592,10 +574,25 @@ while not done:
     score = food_counter
 
     background = pygame.image.load('/Users/apple/Snake-Game/Snake/Assets/Snake Trees.png')
-    score_text = font.render("Score: " + str(score), True, white)
-    time_text = font.render("{:02d}:{:02d}".format(int(elapsed_time // 60), int(elapsed_time % 60)), True, white)
-    game_text = font2.render("SNAKE", True, white)
-    token_text = font3.render("Tokens:" + str(snake.tokens), True, white)
+    score_text = font.render("Score: " + str(score), True, WHITE)
+    time_text = font.render("{:02d}:{:02d}".format(int(elapsed_time // 60), int(elapsed_time % 60)), True, WHITE)
+    game_text = font2.render("SNAKE", True, WHITE)
+    token_text = font3.render("Tokens:" + str(snake.tokens), True, WHITE)
+
+    with open(file_path1, "rb") as file:
+        data = pickle.load(file)
+    save_file1_tokens = font3.render(f'tokens: {data[0].tokens}', True, (255, 255, 255)) 
+    save_file1_score = font3.render(f'score: {data[3]}', True, (255, 255, 255))
+
+    with open(file_path2, "rb") as file:
+        data = pickle.load(file)
+    save_file2_tokens = font3.render(f'tokens: {data[0].tokens}', True, (255, 255, 255)) 
+    save_file2_score = font3.render(f'score: {data[3]}', True, (255, 255, 255))
+
+    with open(file_path3, "rb") as file:
+        data = pickle.load(file)
+    save_file3_tokens = font3.render(f'tokens: {data[0].tokens}', True, (255, 255, 255)) 
+    save_file3_score = font3.render(f'score: {data[3]}', True, (255, 255, 255))
 
     # Display score and time
     gameDisplay.blit(score_text, [50, 65])
