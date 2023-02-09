@@ -10,9 +10,6 @@ file_path1 = '/Users/apple/Snake-Game/Snake/snake1.pickle'
 file_path2 = '/Users/apple/Snake-Game/Snake/snake2.pickle'
 file_path3 = '/Users/apple/Snake-Game/Snake/snake3.pickle'
 
-
-
-
 start_noise = '/Users/apple/Snake-Game/Snake/Assets/start noise1.wav'
 
 
@@ -98,6 +95,21 @@ def home_screen():
                     gameDisplay.blit(save_file1, (390,390))
                     gameDisplay.blit(save_file2, (390,490))
                     gameDisplay.blit(save_file3, (390,590))
+
+                    with open(file_path1, "rb") as file:
+                        data = pickle.load(file)
+                    save_file1_tokens = font3.render(f'tokens: {data[0].tokens}', True, (255, 255, 255)) 
+                    save_file1_score = font3.render(f'score: {data[3]}', True, (255, 255, 255))
+
+                    with open(file_path2, "rb") as file:
+                        data = pickle.load(file)
+                    save_file2_tokens = font3.render(f'tokens: {data[0].tokens}', True, (255, 255, 255)) 
+                    save_file2_score = font3.render(f'score: {data[3]}', True, (255, 255, 255))
+
+                    with open(file_path3, "rb") as file:
+                        data = pickle.load(file)
+                    save_file3_tokens = font3.render(f'tokens: {data[0].tokens}', True, (255, 255, 255)) 
+                    save_file3_score = font3.render(f'score: {data[3]}', True, (255, 255, 255))
 
                     gameDisplay.blit(save_file1_tokens, (500,415))
                     gameDisplay.blit(save_file1_score, (500,380))
@@ -578,6 +590,7 @@ while not done:
     time_text = font.render("{:02d}:{:02d}".format(int(elapsed_time // 60), int(elapsed_time % 60)), True, WHITE)
     game_text = font2.render("SNAKE", True, WHITE)
     token_text = font3.render("Tokens:" + str(snake.tokens), True, WHITE)
+
 
     with open(file_path1, "rb") as file:
         data = pickle.load(file)

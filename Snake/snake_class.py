@@ -1,3 +1,4 @@
+
 class Snake:
     def __init__(self):
         self.body = [(9, 6), (9, 7), (9, 8)]
