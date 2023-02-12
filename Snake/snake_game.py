@@ -10,6 +10,8 @@ file_path1 = '/Users/apple/Snake-Game/Snake/snake1.pickle'
 file_path2 = '/Users/apple/Snake-Game/Snake/snake2.pickle'
 file_path3 = '/Users/apple/Snake-Game/Snake/snake3.pickle'
 
+total_tokens = 0
+
 start_noise = '/Users/apple/Snake-Game/Snake/Assets/start noise1.wav'
 
 
@@ -54,7 +56,7 @@ def home_screen():
         button_hover_long = pygame.image.load('/Users/apple/Snake-Game/Snake/Assets/button_hover_long_screen.png').convert_alpha()
         button_background = pygame.image.load('/Users/apple/Snake-Game/Snake/Assets/button_background_background.png')
         game_text = font2.render("SNAKE", True, WHITE)
-        start_button = font.render("New Game", True, WHITE)
+        start_button = font.render("Resume Game", True, WHITE)
         load_button = font.render("Load Game", True, WHITE)
         token_shop = font.render("Token Shop", True, WHITE)
         game_info = font.render("Game Info", True, WHITE)
@@ -62,7 +64,7 @@ def home_screen():
         home_screen_surface.blit(button_background, [0,-35])
         home_screen_surface.blit(background, [0,-35])
         home_screen_surface.blit(game_text, [305, 25])
-        home_screen_surface.blit(start_button, [420, 240])
+        home_screen_surface.blit(start_button, [390, 240])
         home_screen_surface.blit(load_button, [415, 380])
         home_screen_surface.blit(token_shop, [405, 520])
         home_screen_surface.blit(game_info, [415, 660])
@@ -79,7 +81,7 @@ def home_screen():
                 if not is_hovering:
                     is_hovering = True
                     gameDisplay.blit(button_hover, (340, 222))
-                    gameDisplay.blit(start_button, [420, 240])
+                    gameDisplay.blit(start_button, [390, 240])
                     pygame.display.update()
             elif 340 + 300 > mouse[0] > 340 and 362 + 80 > mouse[1] > 362:
                 if not is_hovering:
@@ -110,155 +112,16 @@ def home_screen():
                     pygame.mixer.music.play(0)
                     homescreen = False
                     return
-                if 340 + 300 > mouse[0] > 340 and 362 + 80 > mouse[1] > 362: #LOAD GAME
-
-                    pause_background = pygame.image.load('/Users/apple/Snake-Game/Snake/Assets/pause screen long.png')
-                    sub_screen = pygame.Surface((1000,1000))
-                    sub_screen.fill(BLACK)
-                    gameDisplay.blit(sub_screen, (0, 0))
-                    gameDisplay.blit(button_background, [0,-35])
-                    gameDisplay.blit(background, [0,-35])
-                    gameDisplay.blit(game_text, [305, 25])
-                    gameDisplay.blit(start_button, [420, 240])
-                    gameDisplay.blit(pause_background, [0, 25])
-
-                    with open(file_path1, "rb") as file:
-                        data = pickle.load(file)
-                    save_file1_tokens = font3.render(f'tokens: {data[0].tokens}', True, (255, 255, 255)) 
-                    save_file1_score = font3.render(f'score: {data[3]}', True, (255, 255, 255))
-                    save_file1_saves = font3.render(f'saves left: {data[9]}', True, (255, 255, 255))
-
-                    with open(file_path2, "rb") as file:
-                        data = pickle.load(file)
-                    save_file2_tokens = font3.render(f'tokens: {data[0].tokens}', True, (255, 255, 255)) 
-                    save_file2_score = font3.render(f'score: {data[3]}', True, (255, 255, 255))
-                    save_file2_saves = font3.render(f'saves left: {data[9]}', True, (255, 255, 255))
-
-                    with open(file_path3, "rb") as file:
-                        data = pickle.load(file)
-                    save_file3_tokens = font3.render(f'tokens: {data[0].tokens}', True, (255, 255, 255)) 
-                    save_file3_score = font3.render(f'score: {data[3]}', True, (255, 255, 255))
-                    save_file3_saves = font3.render(f'saves left: {data[9]}', True, (255, 255, 255))
-
-                    render_saves(save_file1_tokens,
-                                save_file1_score,
-                                save_file1_saves,
-                                save_file2_tokens,
-                                save_file2_score,
-                                save_file2_saves,
-                                save_file3_tokens,
-                                save_file3_score,
-                                save_file3_saves)
-
-                    pygame.mixer.music.load(start_noise)
-                    pygame.mixer.music.play(0)
-                    pygame.display.update()
-                
 
 
-                    pause = True
-                    file_path = None
-                    is_hovering = False
-
-                    while pause:
-                        mouse = pygame.mouse.get_pos()
-                        if 360 + 260 > mouse[0] > 360 and 285 + 120 > mouse[1] > 285:
-                            if not is_hovering:
-                                is_hovering = True
-                                gameDisplay.blit(pause_background, [0, 25])
-                                gameDisplay.blit(button_hover_long, (360, 275))
-                                render_saves(save_file1_tokens,
-                                save_file1_score,
-                                save_file1_saves,
-                                save_file2_tokens,
-                                save_file2_score,
-                                save_file2_saves,
-                                save_file3_tokens,
-                                save_file3_score,
-                                save_file3_saves)
-                                pygame.display.update()
-                        elif 360 + 260 > mouse[0] > 360 and 425 + 120 > mouse[1] > 425:
-                            if not is_hovering:
-                                is_hovering = True
-                                gameDisplay.blit(pause_background, [0, 25])
-                                gameDisplay.blit(button_hover_long, (360, 415))
-                                render_saves(save_file1_tokens,
-                                save_file1_score,
-                                save_file1_saves,
-                                save_file2_tokens,
-                                save_file2_score,
-                                save_file2_saves,
-                                save_file3_tokens,
-                                save_file3_score,
-                                save_file3_saves)
-                                pygame.display.update()
-                        elif 360 + 260 > mouse[0] > 360 and 575 + 120 > mouse[1] > 575:
-                            if not is_hovering:
-                                is_hovering = True
-                                gameDisplay.blit(pause_background, [0, 25])
-                                gameDisplay.blit(button_hover_long, (360, 565))
-                                render_saves(save_file1_tokens,
-                                save_file1_score,
-                                save_file1_saves,
-                                save_file2_tokens,
-                                save_file2_score,
-                                save_file2_saves,
-                                save_file3_tokens,
-                                save_file3_score,
-                                save_file3_saves)
-                                pygame.display.update()                         
-                        else:
-                            if is_hovering:
-                                is_hovering = False
-                                render_saves(save_file1_tokens,
-                                save_file1_score,
-                                save_file1_saves,
-                                save_file2_tokens,
-                                save_file2_score,
-                                save_file2_saves,
-                                save_file3_tokens,
-                                save_file3_score,
-                                save_file3_saves)
-                                pygame.display.update()  
-                        for event in pygame.event.get():
-                            mouse = pygame.mouse.get_pos()
-                            if event.type == pygame.MOUSEBUTTONUP and event.button == 1:
-                                if 360 + 260 > mouse[0] > 360 and 285 + 120 > mouse[1] > 285: #FILE 1
-                                    pygame.mixer.music.load(start_noise)
-                                    pygame.mixer.music.play(0)
-                                    homescreen = False
-                                    global game_loaded
-                                    game_loaded = True
-                                    file_path = file_path1
-                                    return file_path
-                                elif 360 + 260 > mouse[0] > 360 and 425 + 120 > mouse[1] > 425: #File 2
-                                    pygame.mixer.music.load(start_noise)
-                                    pygame.mixer.music.play(0)
-                                    homescreen = False
-                                    game_loaded = True                                
-                                    file_path = file_path2
-                                    return file_path
-                                elif 360 + 260 > mouse[0] > 360 and 575 + 120 > mouse[1] > 575: #FILE 3
-                                    pygame.mixer.music.load(start_noise)
-                                    pygame.mixer.music.play(0)
-                                    homescreen = False
-                                    game_loaded = True                               
-                                    file_path = file_path3
-                                    return file_path
-                            if (event.type == pygame.KEYDOWN and event.key == pygame.K_TAB and not is_hovering):
-                                pause = False
-                                load_game_bool = False
-
-
-def pause_screen(saves_left):
+def pause_screen():
 
     home = False
 
     pygame.mixer.music.load('/Users/apple/Snake-Game/Snake/Assets/snake pause.wav')
     pygame.mixer.music.play(0)
 
-    button_hover_long = pygame.image.load('/Users/apple/Snake-Game/Snake/Assets/button_hover_long_screen.png').convert_alpha()
-    save_hover = pygame.image.load('/Users/apple/Snake-Game/Snake/Assets/save_hover.png').convert_alpha()
+
     exit_hover = pygame.image.load('/Users/apple/Snake-Game/Snake/Assets/exit_hover.png').convert_alpha()
     pause_background = pygame.image.load('/Users/apple/Snake-Game/Snake/Assets/pause screen.png')
     sub_screen = pygame.Surface((395, 395))
@@ -270,12 +133,10 @@ def pause_screen(saves_left):
     speed = font.render(f'Speed:     {framerate}', True, WHITE)
     links = font.render(f'Links:     {len(snake.body)}', True, WHITE)
     multiplier_text = font.render(f'Multiplier:     {multiplier} x', True, WHITE)
-    save_text = font.render(f'Save Game', True, WHITE)
     home_text = font.render(f'Exit to Home', True, WHITE)
-    gameDisplay.blit(speed, (430,365))
-    gameDisplay.blit(links, (440,440))
-    gameDisplay.blit(multiplier_text, (410,515))
-    gameDisplay.blit(save_text, (430,590))
+    gameDisplay.blit(speed, (430,385))
+    gameDisplay.blit(links, (440,485))
+    gameDisplay.blit(multiplier_text, (410,585))
     gameDisplay.blit(home_text, (420,870))
     pygame.display.update()
 
@@ -286,17 +147,11 @@ def pause_screen(saves_left):
 
     while pause:
         mouse = pygame.mouse.get_pos()
-        if 380 + 250 > mouse[0] > 380 and 860 + 60 > mouse[1] > 860: # BACK HOME HOVER
+        if 380 + 250 > mouse[0] > 380 and 860 + 60 > mouse[1] > 860: #GO BACK HOME
             if not is_hovering:
                 is_hovering = True
                 gameDisplay.blit(exit_hover, (400, 815))
                 gameDisplay.blit(home_text, (420,870))
-                pygame.display.update()
-        elif 410 + 160 > mouse[0] > 410 and 580 + 60 > mouse[1] > 580:
-            if not is_hovering:
-                is_hovering = True
-                gameDisplay.blit(save_hover, (410, 577))
-                gameDisplay.blit(save_text, (430,590))
                 pygame.display.update()
         else:
             if is_hovering:
@@ -305,193 +160,39 @@ def pause_screen(saves_left):
                 sub_screen.fill(BLACK)
                 gameDisplay.blit(sub_screen, [310, 310])
                 gameDisplay.blit(pause_background, [0, -35])
-                gameDisplay.blit(speed, (430,365))
-                gameDisplay.blit(links, (440,440))
-                gameDisplay.blit(multiplier_text, (410,515))
-                gameDisplay.blit(save_text, (430,590))
+                gameDisplay.blit(speed, (430,385))
+                gameDisplay.blit(links, (440,485))
+                gameDisplay.blit(multiplier_text, (410,585))
                 pygame.draw.rect(gameDisplay, BLACK, (320, 870, 600, 200), 0)
                 gameDisplay.blit(home_text, (420,870))
                 pygame.display.update()
+                pygame.display.update()    
         for event in pygame.event.get():
-            mouse = pygame.mouse.get_pos()
             if event.type == pygame.MOUSEBUTTONUP and event.button == 1:
                 if 380 + 250 > mouse[0] > 380 and 860 + 60 > mouse[1] > 860: #GO BACK HOME
                     home = True
                     pause = False
-                if 410 + 160 > mouse[0] > 410 and 580 + 60 > mouse[1] > 580: #SAVE GAME
-                    pause_background = pygame.image.load('/Users/apple/Snake-Game/Snake/Assets/pause screen long.png')
-                    sub_screen = pygame.Surface((395, 395))
-                    sub_screen.fill(BLACK)
-                    gameDisplay.blit(sub_screen, [310, 310])
-                    gameDisplay.blit(pause_background, [-7, 45])
-
-                    render_saves(save_file1_tokens,
-                                save_file1_score,
-                                save_file1_saves,
-                                save_file2_tokens,
-                                save_file2_score,
-                                save_file2_saves,
-                                save_file3_tokens,
-                                save_file3_score,
-                                save_file3_saves)
-                    
                     pygame.mixer.music.play(0)
 
-                    save_pause = True
-                    is_hovering = False
 
-                    while save_pause: # SAVE GAME LOOP
-                        mouse = pygame.mouse.get_pos()
-                        if 380 + 250 > mouse[0] > 380 and 860 + 60 > mouse[1] > 860: #BACK HOME HOVER WHEN SAVING GAME
-                            if not is_hovering:
-                                is_hovering = True
-                                gameDisplay.blit(exit_hover, (400, 815))
-                                gameDisplay.blit(home_text, (420,870))
-                                pygame.display.update()
-                        elif 360 + 260 > mouse[0] > 360 and 285 + 120 > mouse[1] > 285:
-                            if not is_hovering:
-                                is_hovering = True
-                                gameDisplay.blit(button_hover_long, (360, 275))
-                                render_saves(save_file1_tokens,
-                                save_file1_score,
-                                save_file1_saves,
-                                save_file2_tokens,
-                                save_file2_score,
-                                save_file2_saves,
-                                save_file3_tokens,
-                                save_file3_score,
-                                save_file3_saves)
-                                pygame.display.update()
-                        elif 360 + 260 > mouse[0] > 360 and 425 + 120 > mouse[1] > 425:
-                            if not is_hovering:
-                                is_hovering = True
-                                gameDisplay.blit(button_hover_long, (360, 415))
-                                render_saves(save_file1_tokens,
-                                save_file1_score,
-                                save_file1_saves,
-                                save_file2_tokens,
-                                save_file2_score,
-                                save_file2_saves,
-                                save_file3_tokens,
-                                save_file3_score,
-                                save_file3_saves)
-                                pygame.display.update()
-                        elif 360 + 260 > mouse[0] > 360 and 575 + 120 > mouse[1] > 575:
-                            if not is_hovering:
-                                is_hovering = True
-                                gameDisplay.blit(button_hover_long, (360, 565))
-                                render_saves(save_file1_tokens,
-                                save_file1_score,
-                                save_file1_saves,
-                                save_file2_tokens,
-                                save_file2_score,
-                                save_file2_saves,
-                                save_file3_tokens,
-                                save_file3_score,
-                                save_file3_saves)
-                                pygame.display.update()                         
-                        else:
-                            if is_hovering:
-                                is_hovering = False                    
-                                sub_screen = pygame.Surface((395, 395))
-                                sub_screen.fill(BLACK)
-                                gameDisplay.blit(sub_screen, [310, 310])
-                                gameDisplay.blit(pause_background, [-7, 45])
-                                pygame.draw.rect(gameDisplay, BLACK, (320, 870, 600, 200), 0)
-                                gameDisplay.blit(home_text, (420,870))
-                                render_saves(save_file1_tokens,
-                                save_file1_score,
-                                save_file1_saves,
-                                save_file2_tokens,
-                                save_file2_score,
-                                save_file2_saves,
-                                save_file3_tokens,
-                                save_file3_score,
-                                save_file3_saves)
-                                pygame.display.update()   
-                        for event in pygame.event.get():
-                            mouse = pygame.mouse.get_pos()
-                            if event.type == pygame.MOUSEBUTTONUP and event.button == 1:
-                                if 380 + 250 > mouse[0] > 380 and 860 + 60 > mouse[1] > 860: #GO BACK HOME
-                                    pygame.mixer.music.play(0)
-                                    home = True
-                                    save_pause = False
-                                    pause = False
-                                if 360 + 260 > mouse[0] > 360 and 285 + 120 > mouse[1] > 285 and saves_left > 0: #Save File 1
-                                    pygame.mixer.music.play(0)
-                                    saves_left -= 1
-                                    save_game(file_path1, snake, framerate, multiplier, food_counter, score, elapsed_time, food_pos, token_pos, body_count, saves_left, display_bool, pause_sound_played)
-                                    break
-                                elif 360 + 260 > mouse[0] > 360 and 425 + 120 > mouse[1] > 425 and saves_left > 0: #Save File 2
-                                    pygame.mixer.music.play(0)
-                                    saves_left -= 1
-                                    save_game(file_path2, snake, framerate, multiplier, food_counter, score, elapsed_time, food_pos, token_pos, body_count, saves_left, display_bool, pause_sound_played)
-                                    break
-                                elif 360 + 260 > mouse[0] > 360 and 575 + 120 > mouse[1] > 575 and saves_left > 0: #Save File 3
-                                    pygame.mixer.music.play(0)
-                                    saves_left -= 1
-                                    print(saves_left)
-                                    save_game(file_path3, snake, framerate, multiplier, food_counter, score, elapsed_time, food_pos, token_pos, body_count, saves_left, display_bool, pause_sound_played)
-                                    break
-                                elif saves_left == 0:
-                                    pygame.mixer.music.load('/Users/apple/Snake-Game/Snake/Assets/snake collision.wav')
-                                    pygame.mixer.music.play(0)
-                                    out_of_saves = font3.render(f'No More Saves!', True, WHITE)
-                                    gameDisplay.blit(out_of_saves, (425,260))
-                                    pygame.display.update()
-                            if (event.type == pygame.KEYDOWN and event.key == pygame.K_TAB):
-                                save_pause = False
                 
             if (event.type == pygame.KEYDOWN and event.key == pygame.K_TAB):
                 pause = False
 
-    return home, saves_left
+    return home
 
-def save_game(file_path, snake, framerate, multiplier, food_counter, score, elapsed_time, food_pos, token_pos, body_count, saves_left, if_statement_run, sound_played):
+def save_game(file_path, snake, framerate, multiplier, food_counter, score, elapsed_time, food_pos, token_pos, body_count, lives_left, if_statement_run, sound_played):
     pygame.mixer.music.load('/Users/apple/Snake-Game/Snake/Assets/snake pause.wav')
     pygame.mixer.music.play(0)
     with open(file_path, "wb") as file:
-        data = (snake, framerate, multiplier, food_counter, score, elapsed_time, food_pos, token_pos, body_count,saves_left, if_statement_run, sound_played)
+        data = (snake, framerate, multiplier, food_counter, score, elapsed_time, food_pos, token_pos, body_count,lives_left, if_statement_run, sound_played)
         pickle.dump(data, file)
 
 def load_game(file_path):
     with open(file_path, "rb") as file:
         # Load the binary file and restore the grid, score, and food_location variables
-        snake, framerate, multiplier, food_counter, score, elapsed_time, food_pos, token_pos, body_count, saves_left, if_statement_run, pause_sound_played = pickle.load(file)
-    return snake, framerate, multiplier, food_counter, score, elapsed_time, food_pos, token_pos, body_count, saves_left, if_statement_run, pause_sound_played
-
-def render_saves(
-save_file1_tokens,
-save_file1_score,
-save_file1_saves,
-save_file2_tokens,
-save_file2_score,
-save_file2_saves,
-save_file3_tokens,
-save_file3_score,
-save_file3_saves):
-    save_file1 = font.render(f'File 1:', True, WHITE)
-    save_file2 = font.render(f'File 2:', True, WHITE)
-    save_file3 = font.render(f'File 3:', True, WHITE)
-
-
-    gameDisplay.blit(save_file1, (390,320))
-    gameDisplay.blit(save_file2, (390,460))
-    gameDisplay.blit(save_file3, (390,610))
-
-    gameDisplay.blit(save_file1_tokens, (500,290))
-    gameDisplay.blit(save_file1_score, (500,330))
-    gameDisplay.blit(save_file1_saves, (500,370))
-
-    gameDisplay.blit(save_file2_tokens, (500,430))
-    gameDisplay.blit(save_file2_score, (500,470))
-    gameDisplay.blit(save_file2_saves, (500,510))
-
-    gameDisplay.blit(save_file3_tokens, (500,580))
-    gameDisplay.blit(save_file3_score, (500,620))
-    gameDisplay.blit(save_file3_saves, (500,660))
-
-    pygame.display.update()
+        snake, framerate, multiplier, food_counter, score, elapsed_time, food_pos, token_pos, body_count, lives_left, if_statement_run, pause_sound_played = pickle.load(file)
+    return snake, framerate, multiplier, food_counter, score, elapsed_time, food_pos, token_pos, body_count, lives_left, if_statement_run, pause_sound_played
 
 
 def create_button(x, y, width, height, text):
@@ -503,10 +204,9 @@ def create_button(x, y, width, height, text):
     gameDisplay.blit(text_surface, (x + width / 2 - text_surface.get_width() / 2, y + height / 2 - text_surface.get_height() / 2))
 
 def draw_buttons():
-        create_button(x, y1, 300, 60, f'-{round(len(snake.body) * .3)}  Links')
-        create_button(x, y2, 300, 60, '-5  Speed')
-        create_button(x, y3, 300, 60, '2x  Multiplier')
-
+        create_button(x2 - 50, y1, 300, 60, f'-{round(len(snake.body) * .3)}  Links')
+        create_button(x2 - 50, y2, 300, 60, '-5  Speed')
+        create_button(x2 - 50, y3, 300, 60, '2x  Multiplier')
 
 def button_screen():
     pause_background = pygame.image.load('/Users/apple/Snake-Game/Snake/Assets/pause screen.png')
@@ -515,7 +215,6 @@ def button_screen():
     sub_screen.fill(BLACK)
     gameDisplay.blit(sub_screen, [310, 310])
     gameDisplay.blit(pause_background, [0, -35])
-    print('this happened')
 
     # Create new buttons
     draw_buttons()
@@ -526,23 +225,21 @@ def button_screen():
         mouse = pygame.mouse.get_pos()
         if x2 + 197 > mouse[0] > x2 and y1 + 55 > mouse[1] > y1: #BACK HOME HOVER WHEN SAVING GAME
             if not is_hovering:
-                print('why')
                 is_hovering = True
-                gameDisplay.blit(pause_hover, (x + 50, y1))
+                gameDisplay.blit(pause_hover, (x2, y1))
                 draw_buttons()
                 pygame.display.update()
         elif x2 + 197 > mouse[0] > x2 and y2 + 55 > mouse[1] > y2: #BACK HOME HOVER WHEN SAVING GAME
             if not is_hovering:
-                print('why2')
                 is_hovering = True
-                gameDisplay.blit(pause_hover, (x + 50, y2))
+                gameDisplay.blit(pause_hover, (x2, y2))
                 draw_buttons()
                 pygame.display.update()
         elif x2 + 197 > mouse[0] > x2 and y3 + 55 > mouse[1] > y3: #BACK HOME HOVER WHEN SAVING GAME
             if not is_hovering:
                 print('why3')
                 is_hovering = True
-                gameDisplay.blit(pause_hover, (x + 50, y3))
+                gameDisplay.blit(pause_hover, (x2, y3))
                 draw_buttons()
                 pygame.display.update()
         else:
@@ -590,7 +287,7 @@ class Snake:
         self.body = [(9, 6), (9, 7), (9, 8)]
         self.direction = "UP"
         self.score = 0
-        self.tokens = 0
+        self.tokens = total_tokens
 
     def change_direction(self, direction):
         if direction == "UP" and self.direction != "RIGHT":
@@ -665,8 +362,7 @@ gameDisplay = pygame.display.set_mode((display_width,display_height))
 pygame.mixer.music.load('/Users/apple/Snake-Game/Snake/Assets/snake loop.wav')
 
 first_key_pressed = False
-
-saves_left = 3
+lives_left = 3
 elapsed_time = 0
 framerate = 20
 multiplier = 1
@@ -718,7 +414,8 @@ while not done:
                 pygame.mixer.music.play(-1)
                 first_key_pressed = True
             if event.key == pygame.K_TAB:
-                home, saves_left = pause_screen(saves_left)
+                save_game(file_path1, snake, framerate, multiplier, food_counter, score, elapsed_time, food_pos, token_pos, body_count, lives_left, display_bool, pause_sound_played)
+                home = pause_screen()
                 first_key_pressed = False
                 if home:
                     homescreen = True
@@ -748,6 +445,13 @@ while not done:
     if snake.check_collision():
         pygame.mixer.music.load('/Users/apple/Snake-Game/Snake/Assets/snake collision.wav')
         pygame.mixer.music.play(0)
+        food_pos = (random.randint(0, 19), random.randint(0, 19))
+        first_key_pressed = False
+        lives_left -= 1
+        snake.body = [(9, 6), (9, 7), (9, 8)]
+        snake.direction = "UP"
+
+    if lives_left == 0:
         framerate = 20
         elapsed_time = 0
         multiplier = 1
@@ -755,8 +459,10 @@ while not done:
         first_key_pressed = False
         food_counter = 0
         body_count = 0
-        saves_left = 3
+        lives_left = 3
+        total_tokens = snake.tokens
         snake = Snake()
+
 
     if snake.score < 20:
         x = 350
@@ -768,6 +474,7 @@ while not done:
     quicker = snake.score % 10 == 0 and snake.score != 0
 
     if snake.check_food():
+        save_game(file_path1, snake, framerate, multiplier, food_counter, score, elapsed_time, food_pos, token_pos, body_count, lives_left, display_bool, pause_sound_played)
         food_counter += multiplier
         pygame.mixer.music.load('/Users/apple/Snake-Game/Snake/Assets/snake loop food.wav')
         pygame.mixer.music.play(0)
@@ -777,6 +484,7 @@ while not done:
                 break
 
     if snake.check_token():
+        save_game(file_path1, snake, framerate, multiplier, food_counter, score, elapsed_time, food_pos, token_pos, body_count, lives_left, display_bool, pause_sound_played)
         food_counter += 1
         pygame.mixer.music.load('/Users/apple/Snake-Game/Snake/Assets/token.wav')
         pygame.mixer.music.play(0)
@@ -793,12 +501,9 @@ while not done:
     screen.fill(BLACK)
 
     if homescreen:
-        file = home_screen()
-
-    
-    if game_loaded:
-        snake, framerate, multiplier, food_counter, score, elapsed_time, food_pos, token_pos, body_count, saves_left, display_bool, pause_sound_played = load_game(file)
-        game_loaded = False
+        home_screen()
+        snake, framerate, multiplier, food_counter, score, elapsed_time, food_pos, token_pos, body_count, lives_left, display_bool, pause_sound_played = load_game(file_path1)
+        homescreen = False
 
     # Draw the grid
     for row in range(20):
@@ -826,35 +531,26 @@ while not done:
     score = food_counter
 
     background = pygame.image.load('/Users/apple/Snake-Game/Snake/Assets/Snake Trees.png')
+    lives = pygame.image.load('/Users/apple/Snake-Game/Snake/Assets/life_icon.png')
     score_text = font.render("Score: " + str(score), True, WHITE)
     time_text = font.render("{:02d}:{:02d}".format(int(elapsed_time // 60), int(elapsed_time % 60)), True, WHITE)
     game_text = font2.render("SNAKE", True, WHITE)
     token_text = font3.render("Tokens: " + str(snake.tokens), True, WHITE)
-    save_text = font3.render("Saves left: " + str(saves_left), True, WHITE)
 
 
     with open(file_path1, "rb") as file:
         data = pickle.load(file)
     save_file1_tokens = font3.render(f'tokens: {data[0].tokens}', True, (255, 255, 255)) 
     save_file1_score = font3.render(f'score: {data[3]}', True, (255, 255, 255))
-    save_file1_saves = font3.render(f'saves left: {data[9]}', True, (255, 255, 255))
 
-    with open(file_path2, "rb") as file:
-        data = pickle.load(file)
-    save_file2_tokens = font3.render(f'tokens: {data[0].tokens}', True, (255, 255, 255)) 
-    save_file2_score = font3.render(f'score: {data[3]}', True, (255, 255, 255))
-    save_file2_saves = font3.render(f'saves left: {data[9]}', True, (255, 255, 255))
-
-    with open(file_path3, "rb") as file:
-        data = pickle.load(file)
-    save_file3_tokens = font3.render(f'tokens: {data[0].tokens}', True, (255, 255, 255)) 
-    save_file3_score = font3.render(f'score: {data[3]}', True, (255, 255, 255))
-    save_file3_saves = font3.render(f'saves left: {data[9]}', True, (255, 255, 255))
 
     # Display score and time
     gameDisplay.blit(score_text, [50, 55])
     gameDisplay.blit(token_text, [50, 110])
-    gameDisplay.blit(save_text, [50, 150])
+    x = 50
+    for i in range(lives_left):
+        gameDisplay.blit(lives, [x, 150])
+        x += 25
     gameDisplay.blit(time_text, [875, 70])
     gameDisplay.blit(game_text, [320, 25])
     gameDisplay.blit(background, [0,-25])
