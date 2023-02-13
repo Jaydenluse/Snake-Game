@@ -54,6 +54,7 @@ def home_screen():
         background = pygame.image.load('/Users/apple/Snake-Game/Snake/Assets/main_screen2.png')
         button_hover = pygame.image.load('/Users/apple/Snake-Game/Snake/Assets/button_hover.png').convert_alpha()
         button_hover_long = pygame.image.load('/Users/apple/Snake-Game/Snake/Assets/button_hover_long_screen.png').convert_alpha()
+        token_background = pygame.image.load('/Users/apple/Snake-Game/Snake/Assets/token_shop.png')
         button_background = pygame.image.load('/Users/apple/Snake-Game/Snake/Assets/button_background_background.png')
         game_text = font2.render("SNAKE", True, WHITE)
         start_button = font.render("Resume Game", True, WHITE)
@@ -112,7 +113,21 @@ def home_screen():
                     pygame.mixer.music.play(0)
                     homescreen = False
                     return
+                if 340 + 300 > mouse[0] > 340 and 500 + 80 > mouse[1] > 500: #TOKEN SHOP
+                    token_shop_surface()
+                    pygame.display.update()
 
+
+
+def token_shop_surface():
+        token_background = pygame.image.load('/Users/apple/Snake-Game/Snake/Assets/token_shop.png')
+        button_background = pygame.image.load('/Users/apple/Snake-Game/Snake/Assets/button_background_background.png')
+        game_text = font2.render("SNAKE", True, WHITE)
+        token_shop_surface = pygame.Surface((1000, 1000))
+        token_shop_surface.blit(button_background, [0,-35])
+        token_shop_surface.blit(token_background, [0,-35])
+        token_shop_surface.blit(game_text, [305, 25])
+        gameDisplay.blit(token_shop_surface, (0, 0))
 
 def pause_screen():
 
