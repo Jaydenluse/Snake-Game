@@ -46,10 +46,10 @@ MARGIN = 3
 
 def home_screen():   
     while True:
-        pygame.mixer.music.load('/Users/apple/Snake-Game/Snake/Assets/snake music.wav')
-        pygame.mixer.music.play(-1)
+        # pygame.mixer.music.load('/Users/apple/Snake-Game/Snake/Assets/snake music.wav')
+        # pygame.mixer.music.play(-1)
         global homescreen 
-        home_screen_surface = pygame.Surface((1000, 1000))
+        home_screen_surface = pygame.Surface((1000, 900))
         pygame.draw.rect(gameDisplay, BLACK, (500, 500, 500, 500), 0)
         background = pygame.image.load('/Users/apple/Snake-Game/Snake/Assets/main_screen2.png')
         button_hover = pygame.image.load('/Users/apple/Snake-Game/Snake/Assets/button_hover.png').convert_alpha()
@@ -74,6 +74,7 @@ def home_screen():
         pygame.display.update()
         load_game_bool = True
         is_hovering = False
+        token_shop_bool = False
 
         while load_game_bool:
             mouse = pygame.mouse.get_pos()
@@ -103,7 +104,7 @@ def home_screen():
                     gameDisplay.blit(game_info, [415, 660])
                     pygame.display.update()                             
             else:
-                if is_hovering:
+                if is_hovering and not token_shop_bool:
                     is_hovering = False
                     gameDisplay.blit(home_screen_surface, (0, 0)) # clear the screen
                     pygame.display.update()            
@@ -111,23 +112,86 @@ def home_screen():
                 if 340 + 300 > mouse[0] > 340 and 225 + 80 > mouse[1] > 225: #START GAME
                     pygame.mixer.music.load(start_noise)
                     pygame.mixer.music.play(0)
+                    print('called')
                     homescreen = False
                     return
                 if 340 + 300 > mouse[0] > 340 and 500 + 80 > mouse[1] > 500: #TOKEN SHOP
+                    token_shop_bool = True #makes it so that you stay on the token shop screen
                     token_shop_surface()
+                    homescreen = False
                     pygame.display.update()
+                    return
 
 
 
 def token_shop_surface():
-        token_background = pygame.image.load('/Users/apple/Snake-Game/Snake/Assets/token_shop.png')
-        button_background = pygame.image.load('/Users/apple/Snake-Game/Snake/Assets/button_background_background.png')
-        game_text = font2.render("SNAKE", True, WHITE)
-        token_shop_surface = pygame.Surface((1000, 1000))
+
+    scroll_offset = 0
+    scroll_speed = 500
+    scroll_direction = None
+
+    token_shop_surface = pygame.Surface((1000, 900), pygame.SRCALPHA)
+
+    token_background_top = pygame.image.load('/Users/apple/Snake-Game/Snake/Assets/token_shop_top.png')
+    token_background_bottom = pygame.image.load('/Users/apple/Snake-Game/Snake/Assets/token_shop_bottom.png')
+    token_bars = pygame.image.load('/Users/apple/Snake-Game/Snake/Assets/token_status_bars1.png')
+    button_background = pygame.image.load('/Users/apple/Snake-Game/Snake/Assets/button_background_background.png')
+    token_hover = pygame.image.load('/Users/apple/Snake-Game/Snake/Assets/token_hover.png')
+    game_text = font2.render("SNAKE", True, WHITE)
+    constant_multiplier = font4.render("2x  Multiplier", True, WHITE)
+    lower_speed = font4.render("Slow  Speed", True, WHITE)
+    more_food_per_link = font4.render("Slow  Growth", True, WHITE)
+    token_output_increase = font4.render("2x  Tokens", True, WHITE)
+    increase_lives = font4.render("+1  Life", True, WHITE)
+    increase_food = font4.render("More  Food", True, WHITE)
+    
+    while True:
+
+        first_page = True
+        second_page = False
+
         token_shop_surface.blit(button_background, [0,-35])
-        token_shop_surface.blit(token_background, [0,-35])
+
+        #FIRST PAGE
+        token_shop_surface.blit(constant_multiplier, [440, 225])
+        token_shop_surface.blit(lower_speed, [450, 365])
+        token_shop_surface.blit(more_food_per_link, [440, 505])
+        token_shop_surface.blit(token_output_increase, [450, 645])
+        token_shop_surface.blit(token_bars, [0, -30])
+
+        #SECOND PAGE
+        if second_page:
+            token_shop_surface.blit(increase_lives, [-400, 365])
+            token_shop_surface.blit(increase_food, [-400, 225])
+            token_shop_surface.blit(token_bars, [-400, -30])
+
+
+        token_shop_surface.blit(token_background_top, [0,-35])
+        token_shop_surface.blit(token_background_bottom, [0,-35])
         token_shop_surface.blit(game_text, [305, 25])
         gameDisplay.blit(token_shop_surface, (0, 0))
+        pygame.display.update()
+
+        for event in pygame.event.get():
+            if event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_TAB:
+                        home_screen()
+                        return
+                    elif event.key == pygame.K_LEFT or event.key == pygame.K_d:
+                            scroll_direction = 'LEFT'
+                    elif event.key == pygame.K_RIGHT or event.key == pygame.K_a:
+                            scroll_direction = 'RIGHT'
+                    
+                    if scroll_direction == 'LEFT':
+                        scroll_offset = max(scroll_offset - scroll_speed, -400)
+                    elif scroll_direction == 'RIGHT':
+                        scroll_offset = min(scroll_offset + scroll_speed, 0)
+
+        mouse_x, mouse_y = pygame.mouse.get_pos()
+        text = font.render(f"Mouse position: ({mouse_x}, {mouse_y})", True, WHITE)
+        gameDisplay.blit(text, (0, 0))
+        pygame.display.update()
+
 
 def pause_screen():
 
@@ -152,7 +216,7 @@ def pause_screen():
     gameDisplay.blit(speed, (430,385))
     gameDisplay.blit(links, (440,485))
     gameDisplay.blit(multiplier_text, (410,585))
-    gameDisplay.blit(home_text, (420,870))
+    gameDisplay.blit(home_text, (420,860))
     pygame.display.update()
 
 
@@ -165,8 +229,8 @@ def pause_screen():
         if 380 + 250 > mouse[0] > 380 and 860 + 60 > mouse[1] > 860: #GO BACK HOME
             if not is_hovering:
                 is_hovering = True
-                gameDisplay.blit(exit_hover, (400, 815))
-                gameDisplay.blit(home_text, (420,870))
+                gameDisplay.blit(exit_hover, (400, 805))
+                gameDisplay.blit(home_text, (420,860))
                 pygame.display.update()
         else:
             if is_hovering:
@@ -179,7 +243,7 @@ def pause_screen():
                 gameDisplay.blit(links, (440,485))
                 gameDisplay.blit(multiplier_text, (410,585))
                 pygame.draw.rect(gameDisplay, BLACK, (320, 870, 600, 200), 0)
-                gameDisplay.blit(home_text, (420,870))
+                gameDisplay.blit(home_text, (420,860))
                 pygame.display.update()
                 pygame.display.update()    
         for event in pygame.event.get():
@@ -368,8 +432,8 @@ class Snake:
 pygame.init()
 
 # Set display dimensions
-display_width = 600
-display_height = 600
+display_width = 1000
+display_height = 1000
 
 # Initialize game display
 gameDisplay = pygame.display.set_mode((display_width,display_height))
@@ -391,9 +455,10 @@ token_pos = (random.randint(0, 19), random.randint(0, 19))
 font = pygame.font.Font(FONT, 45)        
 font2 = pygame.font.Font(FONT, 150)
 font3 = pygame.font.Font(FONT, 25)
+font4 = pygame.font.Font(FONT, 35)
 
 # Set the HEIGHT and WIDTH of the screen
-WINDOW_SIZE = [1000, 1000]
+WINDOW_SIZE = [1000, 900]
 screen = pygame.display.set_mode(WINDOW_SIZE)
 
 # Loop until the user clicks the close button.
@@ -413,7 +478,6 @@ while not done:
         if not pause_sound_played:
             pygame.mixer.music.load('/Users/apple/Snake-Game/Snake/Assets/snake pause.wav')
             pygame.mixer.music.play(0)
-            print('this happened')
             button_screen()
             pause_sound_played = True
         framerate = framerate + 5
@@ -460,6 +524,9 @@ while not done:
     if snake.check_collision():
         pygame.mixer.music.load('/Users/apple/Snake-Game/Snake/Assets/snake collision.wav')
         pygame.mixer.music.play(0)
+        with open('/Users/apple/Snake-Game/Snake/snake_leaderboard.pickle', "wb") as file: #GOING TO DO A LEADERBOARD EVENTUALLY
+            data = (food_counter, elapsed_time)
+            pickle.dump(data, file)
         food_pos = (random.randint(0, 19), random.randint(0, 19))
         first_key_pressed = False
         lives_left -= 1
